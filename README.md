@@ -86,6 +86,35 @@ We need to create a definition of how to build an image from our application in 
 Docker file is a text document that contains commands to assemble an image.
 Docker can then build an image by reading those instructions.
 
+### Structure of Dockerfile
+
+#### FROM
+Build this image from the specified image
+
+#### COPY
+Copies files or directories from <src> and adds them to the filesystem of the container at the path <dest>.
+While "RUN" is executed in the container, "COPY" is executed on the host
+
+#### WORKDIR
+Sets the working directory for all following commands.
+Like changing into a directory: "cd..."
+
+#### RUN
+Will execute any command in a shell inside the container environment
+
+#### CMD
+The instruction that is to be executed when a Docker container starts.
+There can only be one "CMD" instruction in a Dockerfile
+
+#### This command is used for building the docker image
+```diff
+docker build -t node-app:1.0 .
+```
+-t flag : Sets a name and optionally a tag in the "name:tag" format.
+
+Then we have to give a name to the image and a specific tag.
+
+Then we have to give the location of the dockerfile since we are in the same directory where the docker file is located that's why we have given "."
 
 
 
