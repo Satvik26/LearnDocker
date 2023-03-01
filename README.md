@@ -14,14 +14,6 @@ docker run {imagename}:{tag}
 ```diff
 docker run -d {imagename}:{tag}
 ```
-#### This command is used to see the logs if the container is running in the detach/background mode:
-
-We can get the container_id using the docker ps command
-```diff
-docker logs {container_id}
-OR
-docker logs {container_name}
-```
 ##### NOTE: We can just skip the docker pull command and directly use the docker run command if we don't have the image locally. The run command will first try to locate the image remotely and if it does not find it locally it will try to pull it directly from the docker hub and run it. So, it does the work of both the commands.
 
 ### Command used for showing status of all the running containers
@@ -36,16 +28,41 @@ docker images
 ```
 ![alt text](https://github.com/Satvik26/LearnDocker/blob/main/images/images_status.png)
 
+### Troubleshooting Commands
+
+#### This command is used to see the logs if the container is running in the detach/background mode:
+
+We can get the container_id using the docker ps command
+```diff
+docker logs {container_id}
+OR
+docker logs {container_name}
+```
+#### This command is used to get the terminal of the container, navigate a directory, check the log file, check the configuration file, print the environment variables.
+
+```diff
+docker exec -it {container_id} /bin/bash
+OR
+docker exec -it {container_name} /bin/bash
+```
+it = interactive terminal
+
+exit = For exiting for the interactive terminal
+
+
 ### Port Binding
 
 How to access the container after it started running?
 
 We can't access the container as its running in the closed docker network and we can't access it from our local computer browser. We have to first expose the container to our local network using Port Binding. It is a technique that bind the container's port to the host's port to make the service available to the outside world.
 
+
+
 ##### NOTE:
 
 1. Only 1 service can run on a specific port on the host.
 2. It's your wish to choose any port but its standard to use the same port on your host as container is using
+3. Multiple containers can have the have the same container port if they are binded to the different host port.
 
 ![alt text](https://github.com/Satvik26/LearnDocker/blob/main/images/port_binding.png)
 
@@ -55,7 +72,7 @@ docker run -d -p 9000:80 {imagename}:{tag}
 ```
 ### Start and stop containers
 
-#### This command is used too start the docker container
+#### This command is used too start/restart the docker container
 ```diff
 docker start {container_id}
 OR
