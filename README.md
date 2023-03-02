@@ -133,5 +133,37 @@ Then we have to give a name to the image and a specific tag.
 
 Then we have to give the location of the dockerfile since we are in the same directory where the docker file is located that's why we have given "."
 
+### Docker Network
+
+Docker creates it's isolated docker network where the containers are running in. So, when we deploy two docker container in the same docker network. They can talk to each other using just the container name because there are in the same network. The application that run outside the docker isolated environment will connect to docker container through the host i.e. the local host and the port number. So, when we package our application into its own application image we will have the docker container and the application image connected to the docker containers and to the browser which is running on the host but outside the docker network will connect to the application using the hostname and the port number
+
+```diff
+docker network ls
+```
+#### This command creates the docker network
+```diff
+docker network create {network_name}
+```
+
+### Docker scenario with two containers and an application image running in the docker network.
+
+command for running the docker containers in the docker network we have to provide the option in the run command
+
+##### Note: 
+1.We can also specify the environment variables in the docker run command using the -e flag
+
+2. --net = network
+
+Container One
+```diff
+docker run -p 27017:27017 -d -e MONGO_INITDB_ROOT_USERNAME=admin -e MONGO_INITDB_ROOT_PASSWORD=password --name mongodb --net mongo-network mongo 
+```
+Container two
+```diff
+docker run -d -p 8081:8081 -e ME_CONFIG_MONGODB_ADMINUSERNAME=admin -e ME_CONFIG_MONGODB_ADMINPASSWORD=password --net mongo-network --name mongo-express -e ME_CONFIG_MONGODB_SERVER=mongodb mongo-express
+```
+
+
+
 
 
