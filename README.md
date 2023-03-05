@@ -38,12 +38,37 @@ docker logs {container_id}
 OR
 docker logs {container_name}
 ```
+#### This command is used to see the last logs
+```diff
+docker logs {container_id} | tail
+```
+#### This command is used to stream the lgs
+```diff
+docker logs {container_id} -f
+```
 #### This command is used to get the terminal of the container, navigate a directory, check the log file, check the configuration file, print the environment variables.
 
 ```diff
 docker exec -it {container_id} /bin/bash
 OR
 docker exec -it {container_name} /bin/bash
+```
+
+```diff
+docker exec -it {container_id} /bin/sh
+OR
+docker exec -it {container_name} /bin/sh
+```
+#### Commands inside the interactive shell
+
+To display the envionment variables
+```diff
+env
+```
+
+To exit the docker terminal
+```diff
+exit
 ```
 it = interactive terminal
 
@@ -91,6 +116,20 @@ docker stop {container_name}
 docker ps -a
 ```
 
+#### This command is used to delete the docker container
+```diff
+docker rm {container_id}
+OR
+docker rm {container_name}
+```
+
+#### This command is used to delete the docker images
+```diff
+docker rmi {container_id}
+OR
+docker rmi {container_name}
+```
+
 #### This command is used to give the container a meaningfull name using the --name flag.
 ```diff
 docker run --name {container_name} -d -p 9000:80 {imagename}:{tag}
@@ -117,11 +156,13 @@ Sets the working directory for all following commands.
 Like changing into a directory: "cd..."
 
 #### RUN
-Will execute any command in a shell inside the container environment
+Will execute any command in a shell inside the container environment.We can execute any linux command using RUN Any directory created using run command is created in the container not on the host.
 
 #### CMD
 The instruction that is to be executed when a Docker container starts.
-There can only be one "CMD" instruction in a Dockerfile
+There can only be one "CMD" instruction in a Dockerfile as it is a entry point command.
+
+![alt text](https://github.com/Satvik26/LearnDocker/blob/main/images/DockerFile.png)
 
 #### This command is used for building the docker image
 ```diff
@@ -132,6 +173,8 @@ docker build -t node-app:1.0 .
 Then we have to give a name to the image and a specific tag.
 
 Then we have to give the location of the dockerfile since we are in the same directory where the docker file is located that's why we have given "."
+
+We can add the environment variables in the dockerfile as well but its recommended to configure them in the docker-compose.yaml file.
 
 ### Docker Network
 
@@ -162,6 +205,38 @@ Container two
 ```diff
 docker run -d -p 8081:8081 -e ME_CONFIG_MONGODB_ADMINUSERNAME=admin -e ME_CONFIG_MONGODB_ADMINPASSWORD=password --net mongo-network --name mongo-express -e ME_CONFIG_MONGODB_SERVER=mongodb mongo-express
 ```
+
+### Docker Compose
+
+The above way of running the container is little bit tedious and we dont want to run the docker command every time we run the container and it will become more tedious when we have multiple containers.
+
+We can automate this process by using docker-compose and it helps in running multiple container and setting all the configurations.
+
+Yaml Configuration for Container One
+
+![alt text](https://github.com/Satvik26/LearnDocker/blob/main/images/mongo.png)
+
+Yaml Configuration for Container One
+
+![alt text](https://github.com/Satvik26/LearnDocker/blob/main/images/mongo-express.png)
+
+
+Note : Docker Compose takes care of creating a common network and specify in which network these container are running.
+
+#### This command is used to start the container using docker-compose file
+```diff
+docker-compose -f {Name_of_yaml_file_with_extension} up
+```
+example: docker-compose -f mongo.yaml up
+
+#### This command is used to shutdown/stop the container using docker-compose file
+```diff
+docker-compose -f {Name_of_yaml_file_with_extension} down
+```
+example: docker-compose -f mongo.yaml down
+
+Note: When we restart a container everything that we have configured in the container application is gone. So, Data is lost. There is no data persistence. 
+We have concept called Docker Volumes for Data Persistence that we learn later.
 
 
 
