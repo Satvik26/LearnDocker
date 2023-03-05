@@ -237,6 +237,87 @@ example: docker-compose -f mongo.yaml down
 
 Note: When we restart a container everything that we have configured in the container application is gone. So, Data is lost. There is no data persistence. 
 We have concept called Docker Volumes for Data Persistence that we learn later.
+  
+ ### Create Private Docker repository on AWS
+ 
+ We have to login to the AWS console and create repository in ECR(Elastic Container Registry).
+ We have one image per docker repository with differen tags (versions) of the same image.
+  
+ We need to create an IAM user with the access key and the secret key so that we can use the AWS Cli and we need the credentials configured.
+  
+ ### Image Naming in Docker registries
+  
+ registryDomain/imageName:tag
+  
+ ##### Note: In DockerHub whenever we pull an image we didn't use this convention because with docker hub we can pull an image with a shorthand without specifiy a registry domain. docker pull mongo:4.2 is an shorthand for docker pull docker.io/library/mongo:4.2 Since we were working with docker hub we were able to use a shortcut. In a private registry like ECR we can't skip that part because we don't have configuration for that.
+  
+  #### Command use to push the image to the private repository.
+  
+ ```diff
+  docker tag {image_name}:tag {registryDomain}/{image_name}:tag
+  ```
+  Example for the above command
+  
+  docker tag my-app:1.0 8555232422333.dkr.ecr.eu-central-2.amazonaws.com/my-app:1.0
+  
+  Where tag is used to rename the image name
+  
+  ```diff
+  docker push {registryDomain}/{image_name}:tag
+  ```
+  Example for the above command
+  
+  docker push 85552332232232.dkr.ecr.eu-central-2.amazonaws.com/my-app:1.0
+  
+  #### When we need to push the newer version of the image to the AWS ECR since we made some changes to the code or project we need to follow the steps below:
+  
+  1. Build the new image using the build command with the new tag/version
+  ```diff
+  docker build -t my-app:1.1
+  ```
+  2. Use the above commands and push agaiin with the new tag/version as 1.1
+  
+     tag command:
+  
+     docker tag my-app:1.1 8555232422333.dkr.ecr.eu-central-2.amazonaws.com/my-app:1.1
+  
+     push command:
+  
+     docker push 85552332232232.dkr.ecr.eu-central-2.amazonaws.com/my-app:1.1
+  
+ ### Persisting Data with Volumes
+  
+  Docker volumes are used for data persistence in docker. For example we have databases or other stateful applications we will use docker volumes for that
+  
+  Use Cases for docker volumes:
+  
+  When a container runs on a host. Let's say we have a database container and the container has a virtual file system where the data is usually stored but here we dont have any persistence. If we restart the container the data in the virtual file system will be gone and it will be in a fresh state which is not very practical as we need to save the data of our application in the docker volumes.
+  
+  What is a Docker Volume?
+  
+  On a host we have a physical file system and the way volume work we plug the physical file system path eg: folder, directory into the containers file system path. Folder in physical host file system us mounted into the virtual file system if Docker. So, when the container writes to its file system its gets automatically replicated or written in the host file system directory or vice-versa if we change anything in the host file system it gets changed in the container virtual file system. So, if the container starts from the fresh state its gets the data in its virtual file system from the host file system because the data is still there.
+  
+  #### Different types of docker volume.
+  
+  Named Volumes
+  
+  ![alt text](https://github.com/Satvik26/LearnDocker/blob/main/images/hostvolumes.png)
+  
+  Anonymous Volumes
+  
+  ![alt text](https://github.com/Satvik26/LearnDocker/blob/main/images/anonymousvolumes.png)
+  
+  Names Volumes
+  
+  ![alt text](https://github.com/Satvik26/LearnDocker/blob/main/images/NamedVolumes.png)
+  
+  
+  
+  
+  
+  
+  
+  
 
 
 
